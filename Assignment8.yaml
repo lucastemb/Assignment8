@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Movie Theater API (Assignment 8)
+  description: API to Purchase Movie Tickets 
+  version: 1.0.0
+
+paths:
+  /movies:
+    get:
+      summary: Retrieve available movies and showtimes
+      parameters:
+        - name: genre
+          in: query
+          schema:
+            type: string
+          description: Movie genre (ex. comedy, drama, thriller, horror)
+        - name: releaseDate
+          in: query
+          schema:
+            type: date
+          description: Film release date
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: Movie title
+      responses:
+        "200":
+          description: List of available movies and showtimes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    movieId:
+                      type: string
+                    title:
+                      type: string
+                    genre:
+                      type: string
+                    dates:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          showtimes:
+                            type: array
+                            items:
+                              type: date-time
+        "404":
+          description: No movies found
+        "500":
+          description: Server error
+  /movies/{movieId}:
+      post:
+        summary: Add a new movie entry
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  genre:
+                    type: string
+                  releaseDate:
+                    type: string
+                    format: date
+                  showtimes:
+                    type: array
+                    items:
+                      type: string
+                      format: date-time
+        responses:
+          "201":
+            description: Movie successfully created
+          "400":
+            description: Invalid input data
+          "500":
+            description: Server error
+
+      delete:
+        summary: Delete a movie entry by movieId
+        responses:
+          "200":
+            description: Movie successfully deleted
+          "404":
+            description: Movie not found
+          "500":
+            description: Server error
